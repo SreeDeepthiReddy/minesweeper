@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -28,6 +29,8 @@ public class GameboardFragment extends Fragment {
     private AbsoluteLayout tableGrid;
     private GameCell[][] gameBoard;
     private GameModel gameModel;
+    private Button newGameButton;
+    private Button validateButton;
 
     public GameboardFragment() {
     }
@@ -38,6 +41,22 @@ public class GameboardFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_gameboard, container, false);
         tableGrid = (AbsoluteLayout) rootView.findViewById(R.id.gameboard);
         gameModel = new GameModel();
+        newGameButton = (Button) rootView.findViewById(R.id.new_game_button);
+        validateButton = (Button) rootView.findViewById(R.id.validate_game_button);
+
+        newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newGame();
+            }
+        });
+
+        validateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer();
+            }
+        });
 
         return rootView;
     }
@@ -77,10 +96,6 @@ public class GameboardFragment extends Fragment {
                 cell.setPositionAndValue(i, j, gameModel.getGameBoardAt(i, j));
 
                 tableGrid.addView(cell);
-                cell.setMinWidth(cellWidth);
-                cell.setMaxWidth(cellWidth);
-                cell.setMinHeight(cellWidth);
-                cell.setMaxHeight(cellWidth);
                 AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(cellWidth,
                         cellWidth, cellWidth * i, cellWidth * j);
                 cell.setLayoutParams(params);
@@ -91,8 +106,20 @@ public class GameboardFragment extends Fragment {
         }
     }
 
-    private void revealFullBoard() {
+    public void cheatAndRevealMines() {
+        for (int r = 0; r < GameModel.BOARD_HEIGHT; r++) {
+            for (int c = 0; c < GameModel.BOARD_WIDTH; c++) {
+                getCellAt(r, c).cheatAndRevealMine();
+            }
+        }
+    }
 
+    private void revealFullBoard() {
+        for (int r = 0; r < GameModel.BOARD_HEIGHT; r++) {
+            for (int c = 0; c < GameModel.BOARD_WIDTH; c++) {
+                getCellAt(r, c).setRevealed(true);
+            }
+        }
     }
 
     private void revealAround(int row, int col) {
@@ -100,6 +127,40 @@ public class GameboardFragment extends Fragment {
             for (int c = Math.max(col - 1, 0); c <= Math.min(col + 1, GameModel.BOARD_WIDTH - 1); c++) {
                 getCellAt(r,c).setRevealed(true);
             }
+        }
+    }
+
+    private void newGame() {
+        gameModel = new GameModel();
+        renderGrid();
+    }
+
+    private void checkAnswer() {
+        boolean solution = gameModel.validateGameSolution(gameBoard);
+        if (solution) {
+            // game over
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.won_title)
+                    .setMessage(R.string.won_body)
+                    .setNeutralButton(R.string.game_over_button,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // intentionally left blank
+                                }
+                            }).show();
+        } else {
+            // game over, reveal all mines
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.lost_title)
+                    .setMessage(R.string.lost_body)
+                    .setNeutralButton(R.string.game_over_button,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    revealFullBoard();
+                                }
+                            }).show();
         }
     }
 

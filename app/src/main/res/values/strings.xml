@@ -8,4 +8,13 @@
     <string name="game_over_body">You hit a mine.</string>
     <string name="game_over_button">OK</string>
 
+    <string name="won_title">Done!</string>
+    <string name="won_body">You found all the mines.</string>
+
+    <string name="lost_title">You Lost</string>
+    <string name="lost_body">You didn\'t find all the mines correctly.</string>
+
+    <string name="new_game_button">New Game</string>
+    <string name="validate_button">Validate</string>
+
 </resources>

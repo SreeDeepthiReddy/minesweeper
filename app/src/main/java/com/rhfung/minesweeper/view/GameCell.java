@@ -46,6 +46,13 @@ public class GameCell extends Button {
         }
     }
 
+    public void cheatAndRevealMine() {
+        int mineValue = (Integer) getTag(R.id.game_value);
+        if (mineValue == GameModel.MINE) {
+            setText("M");
+        }
+    }
+
     public boolean isRevealed() {
         Boolean revealed = (Boolean) getTag(R.id.game_state);
         return revealed != null ? revealed : false;

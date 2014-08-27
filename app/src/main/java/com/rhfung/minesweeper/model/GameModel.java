@@ -1,5 +1,7 @@
 package com.rhfung.minesweeper.model;
 
+import com.rhfung.minesweeper.view.GameCell;
+
 import java.util.Random;
 
 /**
@@ -39,6 +41,33 @@ public class GameModel {
      */
     public int getGameBoardAt(int row, int column) {
         return gameGrid[row][column];
+    }
+
+    /**
+     * Validates the game grid
+     * @param gameGrid Grid provided by the UI state
+     * @return true if the user correctly identified all mines
+     */
+    public boolean validateGameSolution(GameCell[][] gameGrid) {
+        boolean validSolution = true;
+
+        // check all cells
+        for (int r = 0; r < BOARD_HEIGHT; r++) {
+            for (int c = 0; c < BOARD_WIDTH; c++) {
+                if (getGameBoardAt(r, c) == MINE) {
+                    validSolution = validSolution && !gameGrid[r][c].isRevealed();
+                } else {
+                    validSolution = validSolution && gameGrid[r][c].isRevealed();
+                }
+            }
+
+            // don't need to finish the loop to know the solution is wrong
+            if (!validSolution) {
+                return false;
+            }
+        }
+
+        return validSolution;
     }
 
     /**
