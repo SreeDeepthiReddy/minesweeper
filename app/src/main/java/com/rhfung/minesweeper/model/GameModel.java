@@ -5,7 +5,7 @@ import com.rhfung.minesweeper.view.GameCell;
 import java.util.Random;
 
 /**
- * Created by richard on 8/27/14.
+ * Defines the minesweeper game board and mine count.
  */
 public class GameModel {
     public static final int BOARD_WIDTH = 8;

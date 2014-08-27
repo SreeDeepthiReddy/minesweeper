@@ -1,7 +1,6 @@
 package com.rhfung.minesweeper.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +9,9 @@ import com.rhfung.minesweeper.R;
 import com.rhfung.minesweeper.fragment.GameboardFragment;
 
 
+/**
+ * Activities host fragments. This activity hosts the gameboard fragment.
+ */
 public class GameboardActivity extends Activity {
 
     private static final String GAMEBOARD = "com.rhfung.minesweeper.GameboardFragment";
@@ -36,7 +38,7 @@ public class GameboardActivity extends Activity {
         switch(item.getItemId())
         {
             case android.R.id.home:
-                //User clicked home, do whatever you want
+                // By pressing the app icon, the mines are revealed on the gameboard.
                 GameboardFragment fragment = (GameboardFragment) getFragmentManager().findFragmentByTag(GAMEBOARD);
                 if (fragment != null) {
                     fragment.cheatAndRevealMines();

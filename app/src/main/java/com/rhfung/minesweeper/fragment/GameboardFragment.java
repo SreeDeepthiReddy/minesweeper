@@ -13,15 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-
 import com.rhfung.minesweeper.R;
 import com.rhfung.minesweeper.model.GameModel;
 import com.rhfung.minesweeper.view.GameCell;
 
 /**
- * Created by richard on 8/27/14.
+ * GameboardFragment shows the gameboard plus game controls New Game and Validate.
  */
 public class GameboardFragment extends Fragment {
 
@@ -106,6 +103,9 @@ public class GameboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Reveal the location of all mines without ending the game.
+     */
     public void cheatAndRevealMines() {
         for (int r = 0; r < GameModel.BOARD_HEIGHT; r++) {
             for (int c = 0; c < GameModel.BOARD_WIDTH; c++) {
@@ -114,6 +114,9 @@ public class GameboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Reveal the full game board and end the game.
+     */
     private void revealFullBoard() {
         for (int r = 0; r < GameModel.BOARD_HEIGHT; r++) {
             for (int c = 0; c < GameModel.BOARD_WIDTH; c++) {
@@ -122,6 +125,11 @@ public class GameboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Reveal the surrounding cells for (row, col), which should have 0 mines recorded in it.
+     * @param row
+     * @param col
+     */
     private void revealAround(int row, int col) {
         for (int r = Math.max(row - 1, 0); r <= Math.min(row + 1, GameModel.BOARD_HEIGHT - 1); r++) {
             for (int c = Math.max(col - 1, 0); c <= Math.min(col + 1, GameModel.BOARD_WIDTH - 1); c++) {
@@ -130,11 +138,17 @@ public class GameboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Start a new game board.
+     */
     private void newGame() {
         gameModel = new GameModel();
         renderGrid();
     }
 
+    /**
+     * Checks the validity of the game and tells the user if he/she won.
+     */
     private void checkAnswer() {
         boolean solution = gameModel.validateGameSolution(gameBoard);
         if (solution) {
@@ -164,6 +178,9 @@ public class GameboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Handles when any cell is pressed.
+     */
     private View.OnClickListener cellClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
